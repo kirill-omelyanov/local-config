@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/mdm?ApplicationName=core
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://172.29.255.17:5432/mdm?ApplicationName=local-core-omelyanov
+    username: mdm
+    password: ggF6VMWY
     hikari:
       schema: "public"
       minimum-idle: 4
