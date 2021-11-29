@@ -28,17 +28,8 @@ spring:
             - RewritePath=/api/(?<version>.*)/tree/abac/(?<path>.*), /$\{version}/abac/$\{path}
             - RewritePath=/api/(?<path>.*), /$\{path}
 
-        - id: core
-          uri: lb://soarse-core
-          predicates:
-            - Path=/api/{version}/mdm/**, /api/mdm/**
-          filters:
-            - RewritePath=/api/mdm/actuator/(?<path>.*), /actuator/$\{path}
-            - RewritePath=/api/(?<version>.*)/mdm/abac/(?<path>.*), /$\{version}/abac/$\{path}
-            - RewritePath=/api/(?<path>.*), /$\{path}
-
         - id: mdm
-          uri: lb://platform-mdm
+          uri: lb://mdm
           predicates:
             - Path=/api/{version}/mdm/**, /api/mdm/**
           filters:
