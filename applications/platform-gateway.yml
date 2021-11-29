@@ -1,0 +1,157 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+    whitelabel:
+      enabled: false
+  netty:
+    max-initial-line-length: 65536
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
+  cloud:
+    gateway:
+      plugin:
+        config:
+          log-request: false
+          read-request-data: true
+          read-response-data: false
+      routes:
+
+        - id: tree
+          uri: lb://soarse-tree
+          predicates:
+            - Path=/api/{version}/tree/**, /api/tree/**
+          filters:
+            - RewritePath=/api/tree/actuator/(?<path>.*), /actuator/$\{path}
+            - RewritePath=/api/(?<version>.*)/tree/abac/(?<path>.*), /$\{version}/abac/$\{path}
+            - RewritePath=/api/(?<path>.*), /$\{path}
+
+        - id: core
+          uri: lb://soarse-core
+          predicates:
+            - Path=/api/{version}/mdm/**, /api/mdm/**
+          filters:
+            - RewritePath=/api/mdm/actuator/(?<path>.*), /actuator/$\{path}
+            - RewritePath=/api/(?<version>.*)/mdm/abac/(?<path>.*), /$\{version}/abac/$\{path}
+            - RewritePath=/api/(?<path>.*), /$\{path}
+
+        - id: mdm
+          uri: lb://platform-mdm
+          predicates:
+            - Path=/api/{version}/mdm/**, /api/mdm/**
+          filters:
+            - RewritePath=/api/mdm/actuator/(?<path>.*), /actuator/$\{path}
+            - RewritePath=/api/(?<version>.*)/mdm/abac/(?<path>.*), /$\{version}/abac/$\{path}
+            - RewritePath=/api/(?<path>.*), /$\{path}
+
+
+        - id: validation
+          uri: lb://soarse-validation
+          predicates:
+            - Path=/api/{version}/validation/**, /api/validation/**
+          filters:
+            - RewritePath=/api/validation/actuator/(?<path>.*), /actuator/$\{path}
+            - RewritePath=/api/(?<version>.*)/validation/abac/(?<path>.*), /$\{version}/abac/$\{path}
+            - RewritePath=/api/(?<path>.*), /$\{path}
+
+        - id: identity
+          uri: lb://soarse-identity
+          predicates:
+            - Path=/api/{version}/identity/**, /api/identity/**
+          filters:
+            - RewritePath=/api/identity/actuator/(?<path>.*), /actuator/$\{path}
+            - RewritePath=/api/(?<version>.*)/identity/abac/(?<path>.*), /$\{version}/abac/$\{path}
+            - RewritePath=/api/(?<path>.*), /$\{path}
+
+        - id: file
+          uri: lb://soarse-file
+          predicates:
+            - Path=/api/{version}/file/**, /api/file/**
+          filters:
+            - RewritePath=/api/file/actuator/(?<path>.*), /actuator/$\{path}
+            - RewritePath=/api/(?<version>.*)/file/abac/(?<path>.*), /$\{version}/abac/$\{path}
+            - RewritePath=/api/(?<path>.*), /$\{path}
+
+        - id: relations
+          uri: lb://soarse-relations
+          predicates:
+            - Path=/api/{version}/relations/**, /api/relations/**, /api/{version}/ontologies/**
+          filters:
+            - RewritePath=/api/relations/actuator/(?<path>.*), /actuator/$\{path}
+            - RewritePath=/api/(?<version>.*)/relations/abac/(?<path>.*), /$\{version}/abac/$\{path}
+            - RewritePath=/api/(?<path>.*), /$\{path}
+
+        - id: mockserver
+          uri: http://mockserver:1080
+          predicates:
+            - Path=/api/{version}/mockserver/**, /api/mockserver/**
+          filters:
+            - RewritePath=/api/v1/mockserver/(?<path>.*), /$\{path}
+
+        - id: policy
+          uri: lb://soarse-policy
+          predicates:
+            - Path=/api/{version}/abac/**, /api/abac/**
+          filters:
+            - RewritePath=/api/abac/actuator/(?<path>.*), /actuator/$\{path}
+            - RewritePath=/api/(?<path>.*), /$\{path}
+
+        - id: metadata
+          uri: lb://soarse-metadata
+          predicates:
+            - Path=/api/{version}/formula/**, /api/formula/**
+          filters:
+            - RewritePath=/api/formula/actuator/(?<path>.*), /actuator/$\{path}
+            - RewritePath=/api/(?<version>.*)/formula/abac/(?<path>.*), /$\{version}/abac/$\{path}
+            - RewritePath=/api/(?<path>.*), /$\{path}
+
+        - id: pipeline
+          uri: lb://soarse-pipeline
+          predicates:
+            - Path=/api/{version}/pipeline/**, /api/pipeline/**
+          filters:
+            - RewritePath=/api/pipeline/actuator/(?<path>.*), /actuator/$\{path}
+            - RewritePath=/api/(?<version>.*)/pipeline/abac/(?<path>.*), /$\{version}/abac/$\{path}
+            - RewritePath=/api/(?<path>.*), /$\{path}
+
+gateway:
+  security:
+    enabled: false
+    key-life-time: 15m
+    key-usage-time: 10m
+    inactivity-time: 30m
+    force-single-session: false
+    force-global-logout: false
+    skip-paths:
+      - "/v1/identity/users/password"
+      - "/v1/validation/globalTypes/ref"
+      - "/v1/validation/globalTypes/file"
+  securityKey:
+    sameSite: "None"
+    httpOnly: true
+    secure: true
+    path: "/api"
+    maxAge: 900 # 15 минут
+  session:
+    sameSite: "None"
+    httpOnly: true
+    secure: true
+    path: "/api"
+    maxAge: 2147483645
+  services:
+    - soarse-file
+    - soarse-forms
+    - soarse-gateway
+    - soarse-identity
+    - soarse-math
+    - soarse-core
+    - soarse-tree
+    - soarse-validation
+    - soarse-policy
+    - soarse-pipeline
+
+ribbon:
+  ConnectTimeout: 1000
+  ReadTimeout: 3000

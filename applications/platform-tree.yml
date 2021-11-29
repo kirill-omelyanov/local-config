@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/mdm-tree?ApplicationName=tree&socketTimeout=30
+    username: mdm-tree
+    password: SuuU8duE
+    hikari:
+      schema: "public"
+      minimum-idle: 4
+      maximum-pool-size: 12
+      max-lifetime: 840000
+      keepalive-time: 120000
+
+tree:
+  query-batch-size: 100
+  suppliers:
+    connect-timeout: 5000
+    read-timeout: 10000
+    max-attempts: 0
+  modules:
+    - service-id: soarse-core
+      name: core
+      types:
+        - key: element
+        - key: classifier
+    - service-id: soarse-pipeline
+      name: pipeline
+      types:
+        - key: process
+
+abac:
+  metadata:
+    jooq-package: "com.soarse.tree.model"
+    exclude-patterns:
+      - ".*jooq.*"

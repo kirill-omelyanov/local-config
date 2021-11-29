@@ -1,0 +1,74 @@
+server:
+  max-http-header-size: 8KB
+spring:
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: true
+  sleuth:
+    sampler:
+      probability: 1.0
+  zipkin:
+    base-url: http://zipkin-9411/
+    discovery-client-enabled: true
+    sender:
+      type: web
+  redis:
+    host: redis
+    port: 6379
+  rabbitmq:
+    host: rabbitmq
+    username: "rabbitmq"
+    password: "rabbitmq"
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        format_sql: true
+    show-sql: true
+  security:
+    strategy: "MODE_INHERITABLETHREADLOCAL"
+  flyway:
+    placeholders:
+      global-types-url: ${platform.global-types-url}
+
+
+jwt:
+  serviceIds:
+    soarse-gateway: "bb743523-f390-4a08-834e-9d1c592ccec4"
+    soarse-tree: "84ac8273-39c7-4b4c-becf-36280ba4a545"
+    soarse-core: "efe3ea77-288d-40cb-a608-8e17c7758207"
+    soarse-forms: "7bf0a3fe-8b89-4802-9bc4-8494b05fab53"
+    soarse-policy: "922a77de-6ec2-4217-9799-a38e6a950939"
+    soarse-identity: "e0e051a5-78ff-4c8e-9d16-df4aad623e65"
+    soarse-formula: "bb743523-f390-4a08-834e-9d1c592ccec4"
+    soarse-relations: "f8c8b530-82e7-40f2-ae46-c8cc4f2d1274"
+    soarse-pipeline: "b5885de9-2317-48b0-9bba-6e8faa52ecb1"
+    rfs_adapter: "bb743523-f390-4a08-834e-9d1c592ccec2"
+
+platform:
+  global-types-url: 'http://dev.platform.gost-group.com/api/v1/validation'
+  providers:
+    - serviceId: soarse-core
+      serviceName: core
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    git:
+      mode: full
+reference:
+  services:
+    mdm: "soarse-core"
+    identity: "soarse-identity"
+abac:
+  services:
+    - soarse-core
+    - soarse-tree
+    - soarse-identity

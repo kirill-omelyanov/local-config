@@ -1,0 +1,50 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/mdm?ApplicationName=core
+    username: postgres
+    password: postgres
+    hikari:
+      schema: "public"
+      minimum-idle: 4
+      maximum-pool-size: 12
+      max-lifetime: 840000
+  main:
+    allow-bean-definition-overriding: true
+  jooq:
+    sql-dialect: Postgres
+  mvc:
+    async:
+      request-timeout: 3600000
+
+server:
+  port: 8081
+
+element:
+  versioning:
+    enabled: true
+    manual-control: true
+    insert-version: true
+    #minimum-date: 1970-01-01T00:00:00+00:00
+    #maximum-date: 2030-01-01T00:00:00+03:00
+    time-gap: true
+    on-delete: NONE
+    on-insert: START_NOW_ALWAYS
+    #override: true
+    #merge: true
+
+serviceMapping: "mdm"
+
+mq:
+  exchanges:
+    create-relations:
+      enabled: true
+    sync-ontology-class:
+      enabled: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 60000
+        readTimeout: 60000
