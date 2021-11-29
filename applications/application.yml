@@ -18,8 +18,8 @@ spring:
     port: 6379
   rabbitmq:
     host: rabbitmq
-    username: "rabbitmq"
-    password: "rabbitmq"
+    username: "guest"
+    password: "guest"
   jpa:
     open-in-view: false
     properties:
